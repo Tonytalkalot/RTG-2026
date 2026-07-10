@@ -1,0 +1,43 @@
+# Sensitive files
+dropbox.txt
+token.txt
+openaikey.txt
+gemini.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# Exports and data
+exports/
+servers.json
+serversb.json
+*.gz
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+
+# Temp files
+tmp/
+temp/

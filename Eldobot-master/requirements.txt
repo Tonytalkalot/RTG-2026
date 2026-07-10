@@ -1,0 +1,15 @@
+discord.py
+aiofiles
+dropbox
+plotly
+unidecode
+kaleido==0.2.1
+scikit-learn
+simpleeval
+google-generativeai
+grpcio
+aiohttp
+pandas
+numpy
+orjson
+sentry-sdk
