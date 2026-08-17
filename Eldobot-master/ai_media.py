@@ -1,4 +1,4 @@
-"""AI Media System - Non-blocking content generation for Basketball GM events"""
+"""AI Media System - Non-blocking content generation for Football GM events"""
 import asyncio
 import shared_info
 from gemini_integration import model, build_trade_context
