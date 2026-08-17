@@ -92,16 +92,16 @@ import nba_data
 import nba_team_data
 try:
     nba_data.load()
-    print("NBA comparison data loaded.")
+    print("NFL comparison data loaded.")
 except Exception as e:
-    print(f"NBA data not available: {e}")
+    print(f"NFL data not available: {e}")
 try:
     nba_team_data.load()
-    print(f"NBA team comparison data loaded ({len(nba_team_data._df)} team-seasons, {len(nba_team_data._stars_by_key)} star pairs).")
+    print(f"NFL team comparison data loaded ({len(nba_team_data._df)} team-seasons, {len(nba_team_data._stars_by_key)} star pairs).")
 except Exception as e:
-    print(f"NBA team data not available: {e}")
+    print(f"NFL team data not available: {e}")
 
-AI_COMMANDS = {'nbacomp', 'scout', 'tnbacomp', 'tscout'}
+AI_COMMANDS = {'nflcomp', 'scout', 'tnflcomp', 'tscout'}
 _ai_cooldowns = {}  # user_id -> last call timestamp
 
 async def safe_send(channel, content, max_retries=3):
