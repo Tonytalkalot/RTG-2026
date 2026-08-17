@@ -1,0 +1,36 @@
+import nfl_data_py as nfl
+import pandas as pd
+
+# Install first: pip install nfl_data_py
+
+# Get player stats for multiple seasons
+seasons = [2023, 2024, 2025]
+stats = nfl.import_nfl_data(seasons)
+
+# Filter for player stats (career stats by player)
+player_stats = stats.groupby(['player_name', 'player_id']).agg({
+    'receiving_rec': 'sum',
+    'receiving_yards': 'sum',
+    'receiving_td': 'sum',
+    'rushing_att': 'sum',
+    'rushing_yards': 'sum',
+    'rushing_td': 'sum',
+    'passing_yards': 'sum',
+    'passing_td': 'sum',
+    'passing_int': 'sum',
+    'total_tackles': 'sum',
+    'defensive_sacks': 'sum',
+    'tackles_forloss': 'sum',
+    'passes_defended': 'sum',
+    'forced_fumbles': 'sum',
+    'fumbles_recovered': 'sum',
+    'defensive_int': 'sum',
+    'interception_td': 'sum',
+    'sack_yards': 'sum',
+    'interception_yards': 'sum',
+    'fumbles_touchdowns': 'sum',
+}).reset_index()
+
+# Save to CSV
+player_stats.to_csv('nfl_player_stats.csv', index=False)
+print("NFL stats saved to nfl_player_stats.csv")
