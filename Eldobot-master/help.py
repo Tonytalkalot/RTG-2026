@@ -150,8 +150,8 @@ rosterScreen = {
 }
 
 chartScreen = {
-    'proggraph [player] [rating]': 'Plot a player\'s rating over their career. Rating is optional (ovr, pot, spd, tp, fg, ft, ins, dnk, stre, jmp, pss, drb, oiq, diq, endu). Example: proggraph LeBron James spd',
-    'progspredict [player] [rating] [next]': 'Predict career peak for a player based on similar players. Add "next" to predict next season instead. Example: progspredict Giannis tp',
+    'proggraph [player] [rating]': 'Plot a player\'s rating over their career. Rating is optional (ovr, pot, Hgt, Spd, End, BSc, Elu, RtR, Hnd, Tck, PRs, RnS, PCv, PBk, RBk, ThV, ThP, ThA, KPw, KAc, PPw, PAc). Example: proggraph LeBron James spd',
+    'progspredict [player] [rating] [next]': 'Predict career peak for a player based on similar players. Add "next" to predict next season instead. Example: progspredict Jefferson's tp',
     'schart [stat] [player1, player2, ...]': 'Plot a stat over time for one or more players (comma-separated). Stats: pts, reb, ast, blk, stl, tp, tov, gp. Add "season" or "year" to change x-axis. Example: schart pts LeBron James, Michael Jordan',
     'cschart [stat] [player1, player2, ...]': 'Cumulative version of schart — tracks all-time totals. Example: cschart pts LeBron James, Kareem',
     'leaguegraph [xstat] [ystat] [season]': 'Scatter plot of all teams by two stats. Defaults to ptdiff vs win%. Use lgoptions to see all stat choices. Example: leaguegraph pts win%',
