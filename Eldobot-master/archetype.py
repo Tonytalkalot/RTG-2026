@@ -30,7 +30,7 @@ archetype reflects how a player ranks among peers rather than absolute rating
 values, which adapts to the league's power level. Without ``dim_stats`` the
 matcher falls back to the spreadsheet's original absolute behavior.
 
-Two things stay absolute by design: the Scoring *style* (the  BSc, Elu, RtR, Hnd, Tck, PRs, RnS, PCv, PBk, RBk, ThV, ThP, ThA, KPw, KAc, PPw, PAc).
+Two things stay absolute by design: the Scoring *style* (the  BSc, Elu, RtR, Hnd, Tck, PRs, RnS, PCv, PBk, RBk, ThV, ThP, ThA, KPw, KAc, PPw, PAc
 mix, which is the player's intrinsic shot profile) and Height (which maps to
 real inches and shouldn't inflate with league quality).
 
