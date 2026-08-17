@@ -38,11 +38,11 @@ Create a response that:
 - Mentions concrete details (player ratings, age, team record, cap situation)
 
 Examples of good responses:
-- "Tanking Pistons flip 31-year-old declining vet for youth; classic timeline pivot"
-- "Warriors betting 84-OVR Curry can carry them one more year while Spurs rebuild"  
-- "Lakers gave up their only shooter (42% from three) for another non-spacing big"
-- "Thunder adds the 3rd-best U25 player while keeping all their picks somehow"
-- "Heat culture meets 22-year-old with 90 potential - perfect development situation"
+- "Tanking Ravens flip 31-year-old declining vet for youth; classic timeline pivot"
+- "Raiders betting 84-OVR Mendoza can carry them one more year while Carolina rebuild"  
+- "Chargers gave up their only QB (65% completion) for another Raw D-line prospect"
+- "The Jaguars add the 3rd-best receiver in the leauge while keeping all their picks somehow"
+- "Dolphins culture meets 22-year-old with 90 potential - perfect development situation"
 
 ONE SENTENCE. Be specific about WHY this trade matters."""
     
@@ -66,7 +66,7 @@ async def generate_rejection_message(tradeData, export, reason):
 
     context = build_trade_context(tradeData, export)
 
-    prompt = f"""You are a sassy, confident AI acting as a basketball GM. A team just proposed a trade to you that you're rejecting.
+    prompt = f"""You are a sassy, confident AI acting as a football GM. A team just proposed a trade to you that you're rejecting.
 
 TRADE DETAILS:
 {context['summary']}
