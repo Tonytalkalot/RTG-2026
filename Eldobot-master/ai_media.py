@@ -53,7 +53,7 @@ def get_stat_leaders(export, season, stat_name, count=5, min_gp=10):
     players = export['players']
     teams = export['teams']
     leaders = []
-    per_game_stats = ['pts', 'ast', 'stl', 'blk', 'tov', 'min']
+    per_game_stats = ['Cmp','Att','Pct','Yds','TD','Int','Rush','Tgt','Rec','PBW','PBA','PBWR','RBW','RBA','RBWR','SkAlw','SkAlw%','FGM','FGA','Pct','Lng','XPM','XPA','Pct','Tck','Sk','PD','Int','FF','FR']
 
     for p in players:
         if p['tid'] < 0 or not p.get('stats'):
@@ -440,9 +440,9 @@ async def generate_trade_analysis_async(export, tradeData, guild_id):
         import random
         personalities = [
             'You are a hot take artist. Be bold and controversial. Use phrases like "highway robbery", "fleeced", "what were they thinking?", "steal of the century"',
-            'You are a basketball analyst. Focus on fit and roles. Use terms like "floor spacing", "two-way player", "defensive liability", "offensive hub", "glue guy"',
+            'You are a football analyst. Focus on fit and roles. Use terms like "floor general", "generational prospect", "bust", "gem", "underrated talent"',
             'You are a comedy writer. Use funny analogies and witty observations. Compare trades to everyday situations, use pop culture references.',
-            'You are an old-school scout. Focus on intangibles. Use phrases like "high motor", "basketball IQ", "locker room presence", "winning player", "empty stats"'
+            'You are an old-school scout. Focus on intangibles. Use phrases like "high motor", "high iq", "locker room presence", "winning player", "empty stats"'
         ]
         
         personality = random.choice(personalities)
@@ -797,7 +797,7 @@ Format for Discord with **bold** headers. Start with **{season} PLAYOFF PREVIEW*
 
         if content:
             embed = discord.Embed(
-                title="🏀 Playoff Preview",
+                title=" Playoff Preview",
                 description=content,
                 color=discord.Color.purple()
             )
@@ -924,7 +924,7 @@ TOP PROSPECTS AVAILABLE:
 Write a draft lottery column (2-3 paragraphs, under 1500 characters). NOT just listing the pick order. Instead:
 - Look at the top prospects and which teams are picking where — who's getting a steal? Which prospect is the perfect fit for which team?
 - If there's a clear #1 prospect, who's getting them and does that team even need them?
-- Which lottery team already has a young core and just needs one more piece vs which is in total rebuild mode?
+- Which team already has a young core and just needs one more piece vs which is in total rebuild mode?
 - If any picks were traded, call out who fleeced whom
 - Be opinionated — mock draft the top 3 picks and explain the fits
 
@@ -1560,7 +1560,7 @@ TOP 5 OVERALL:
 Write a midseason column (2-3 paragraphs, under 1500 characters). The season is taking shape:
 - Who's the MVP frontrunner and why? Reference the scoring race
 - Which team's rise or fall is the best story of the season?
-- Who's winning MIP? Which team has the best offense or defense?
+- Who's winning DPOY? Which team has the best offense or defense?
 - The playoff race — who's comfortably in, who's sweating?
 - Be opinionated. Have real takes, not just observations
 
