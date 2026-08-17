@@ -217,7 +217,7 @@ def upload_to_dropbox(path_to_file, dest_path):
 def _upload_export_gzipped(path_to_file, guild_id):
     """Gzip-compress the export JSON then upload as .json.gz to Dropbox.
 
-    BBGM JSON compresses 5-8x (lots of repeated keys / numeric runs),
+    FBGM JSON compresses 5-8x (lots of repeated keys / numeric runs),
     so this is the highest-leverage way to keep Dropbox under quota.
     Also cleans up the legacy uncompressed .json file at the same base
     path so we don't keep both versions around.
@@ -452,21 +452,27 @@ def group_numbers(numbers):
 def rating_names(text):
     text = str.lower(text)
     ratingTerms = {
-        "hgt": ['height', 'tall', 'tallness', 'size', 'stature',],
-        "stre": ['strength', 'muscle', 'toughness', 'fat', 'big', 'heavy', 'wide'],
-        "spd": ['speed', 'quick', 'quickness', 'rapidity', 'velocity', 'agility', 'acceleration'],
-        "jmp": ['jump', 'jumping', 'vertical', 'leap', 'leaping', 'bounce', 'hop'],
-        "endu": ['endurance', 'stamina', 'cardio', 'resilience', 'sustainability'],
-        "ins": ['inside', 'post', 'interior', 'paint', 'lowpost', 'closerange'],
-        "dnk": ['dunks', 'layups', 'dunks/layups', 'slashing', 'driving', 'finishing'],
-        "ft": ['freethrows', 'freethrow', 'foulshot', 'free'],
-        "fg": ['midrange', '2pt', 'twopoint', 'twopointers', 'two', '2p'],
-        "tp": ['threepoint', 'outside', 'range', '3pt', 'three', 'triple', '3p'],
-        "oiq": ['offensiveiq', 'offense', 'offensiveawareness'],
-        "diq": ['defensiveiq', 'defense', 'defensiveawareness'],
-        "drb": ['dribbling', 'handling', 'handles', 'control', 'ballhandling'],
-        "pss": ['passing', 'pass', 'playmaking', 'pas', 'assist'],
-        "reb": ['rebounding', 'boards', 'board', 'rebound', 'boxout', 'box']
+        "Hgt": ['height', 'tall', 'tallness', 'size', 'stature',],
+        "Str": ['strength', 'muscle', 'toughness', 'fat', 'big', 'heavy', 'wide'],
+        "Spd": ['speed', 'quick', 'quickness', 'rapidity', 'velocity', 'agility', 'acceleration'],
+        "End": ['endurance', 'stamina', 'cardio', 'resilience', 'sustainability'],
+        "BSc": ['ballsecurity', 'carry', 'secure', 'hold', 'keep', 'grip'],
+        "Elu": ['elusiveness', 'slippery', 'shifty', 'juke', 'spin', 'shake'],
+        "RtR": ['routerunning', 'routetree', 'Routecombinations', 'route'],
+        "Hnd": ['hands', 'catch', 'grab', 'grip', 'snatch', 'catching'],
+        "Tck": ['tackling', 'challenge', 'bringdown', 'Halt', 'TakeDown', 'challenge'],
+        "PRs": ['passrushing', 'passrush', 'dash'],
+        "RnS": ['runstopping', 'stop', 'disrupt','runstop'],
+        "PCv": ['passcoverage', 'cover', 'guard', 'intercept', 'breakup'],
+        "PBk": ['passblocking', 'block', 'prevent', 'help', 'protect'],
+        "RBk": ['runblocking', 'block', 'prevent', 'help', 'push'],
+        "ThV": ['throwingvision', 'vision', 'awarness', 'sight', 'perception'],
+        "ThP": ['throwingpower', 'power', 'toss', 'hurl', 'launch'],
+        "ThA": ['throwingaccuracy', 'accuracy', 'precision', 'ontarget', 'accurate'],
+        "KPw": ['kickingpower', 'power', 'reach', 'boot', 'lob'],
+        "KAc": ['kickingaccuracy', 'accuracy', 'precision', 'ontarget', 'accurate'],
+        "PPw": ['puntingpower', 'power', 'reach', 'boot', 'lob'],
+        "PAc": ['puntingaccuracy', 'accuracy', 'precision', 'ontarget', 'accurate'],
     }
     for r, t in ratingTerms.items():   
         for thing in t:
@@ -547,21 +553,27 @@ def calculate_formula(p, season, formula):
     # Create context dictionary with all variables
     context = {
         'age': age,
-        'hgt': r['hgt'],
-        'stre': r['stre'],
-        'spd': r['spd'],
-        'jmp': r['jmp'],
-        'endu': r['endu'],
-        'ins': r['ins'],
-        'dnk': r['dnk'],
-        'fg': r['fg'],
-        'ft': r['ft'],
-        'tp': r['tp'],
-        'oiq': r['oiq'],
-        'diq': r['diq'],
-        'drb': r['drb'],
-        'pss': r['pss'],
-        'reb': r['reb'],
+        'Hgt': r['Hgt'],
+        'Str': r['Str'],
+        'Spd': r['Spd'],
+        'End': r['End'],
+        'ThV': r['ThV'],
+        'ThP': r['ThP'],
+        'ThA': r['ThA'],
+        'BSc': r['BSc'],
+        'Hnd': r['Hnd'],
+        'RtR': r['RtR],
+        'RBk': r['RBk'],
+        'PBk': r['PBk'],
+        'PRs': r['PRs'],
+        'RnS': r['RnS],
+        'Tck': r['Tck'],
+        'PCv': r['PCv'],
+        'KPw': r['KPw'],
+        'KAc': r['KAc'],
+        'PPw': r['PPw'],
+        'PAc': r['PAc'],
+        'Elu': r['Elu'],
         'ovr': r['ovr'],
         'pot': r['pot']
     }
@@ -642,7 +654,7 @@ def get_nested_value(dct, keys):
     return dct
     
 def player_list_embed(playerList, pageNum, season, sortBy, reverse=True, draft=False):
-    values = ['ovr', 'pot', 'hgt', 'stre', 'spd', 'jmp', 'endu', 'ins', 'dnk', 'ft', 'fg', 'tp', 'oiq', 'diq', 'drb', 'pss', 'reb']
+    values = [ 'Hgt': ,'Str','Spd','End','ThV','ThP','ThA','BSc','Hnd','RtR','RBk','PBk','PRs','RnS','Tck','PCv','KPw','KAc','PPw','PAc','Elu']
     # Coalesce missing/non-numeric values to a sentinel so sort doesn't
     # TypeError when a player has a missing rating / nested value (happens in
     # mid-season imports and ratingless leagues). Coerce to float so Decimal
