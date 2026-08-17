@@ -1,8 +1,8 @@
 """One-off scraper: fetch per-game team + opponent stats from Basketball Reference for each season 1990+.
 
-Writes static/nba_team_seasons.csv with one row per team-season.
+Writes static/nfl_team_seasons.csv with one row per team-season.
 
-Run: python scripts/scrape_nba_teams.py
+Run: python scripts/scrape_nfl_teams.py
 
 Be polite — sleeps 4s between requests (BR's rate limit is ~20/min on the public site).
 """
@@ -14,7 +14,7 @@ import re
 import urllib.request
 import pandas as pd
 
-OUT = os.path.join(os.path.dirname(__file__), '..', 'static', 'nba_team_seasons.csv')
+OUT = os.path.join(os.path.dirname(__file__), '..', 'static', 'nfl_team_seasons.csv')
 START = 1990
 END = 2026  # inclusive
 HEADERS = {'User-Agent': 'Mozilla/5.0 (eldobot-team-data/1.0)'}
@@ -44,7 +44,7 @@ def normalize(df):
 
 
 def scrape_season(year):
-    url = f'https://www.basketball-reference.com/leagues/NBA_{year}.html'
+    url = f'https://www.pro-football-reference.com/years/NFL/index.htm'
     html = fetch(url)
 
     team = parse_table(html, 'per_game-team')
@@ -69,15 +69,33 @@ def scrape_season(year):
     # Pull what we need
     cols_team = {
         'team_clean': 'team',
-        'G': 'g',
-        'PTS': 'ppg',
-        'TRB': 'rpg',
-        'AST': 'apg',
-        'TOV': 'tov_pg',
-        '3PA': 'tp_attempts_pg',
-        'FG%': 'fg_pct',
-        '3P%': 'tp_pct',
+        'Tms': 'Tms',
+        'PF': 'PF',
+        'Yds': 'Yds',
+        'Ply': 'Ply',
+        'Y/P': 'Y/P',
+        'TO': 'TO',
+        'FL': 'FL',
+        '1stD': '1stD',
         'FT%': 'ft_pct',
+        'Cmp': 'Cmp',
+        'Att': 'Att',
+        'Yds': 'Yds',
+        'TD': 'TD',
+        'Int': 'Int',
+        'NY/A' : 'NY/A',
+        '1stD' : '1stD',
+        'Att': 'Att',
+        'Yds': 'Yds',
+        'TD': 'TD',
+        'Y/A': 'Y/A',
+        '1stD': '1stD',
+        '#Dr': '#Dr',
+        'Sc%': 'Sc%',
+        'TO%': 'TO%',
+        'Plays': 'Plays',
+        'Yds': 'Yds',
+        'Pts': 'Pts',
     }
     cols_opp = {'team_clean': 'team', 'PTS': 'opp_ppg'}
 
