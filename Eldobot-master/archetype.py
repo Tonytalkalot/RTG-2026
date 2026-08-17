@@ -1,7 +1,7 @@
-"""Canonical BBGM archetype namer.
+"""Canonical FBGM archetype namer.
 
 A faithful Python port of the community "BBGM Archetype Calculator v2.0"
-spreadsheet. Given a player's raw BBGM ratings + position, it produces the
+spreadsheet. Given a player's raw FBGM ratings + position, it produces the
 canonical archetype string, e.g.::
 
     "Athletic Two-Way Shooting Point Forward"
@@ -11,7 +11,7 @@ canonical archetype string, e.g.::
 The name is built by picking the best-matching descriptor from five ordered
 categories and concatenating them:
 
-    [Height] [Athleticism] [IQ] [Scoring] [Skill]
+    [Height] [Athleticism] [Scoring] [Skill]
 
 Each non-scoring category scores every candidate row by
 
@@ -22,7 +22,7 @@ distribution-based with positional/threshold gates (see ``_scoring`` below).
 
 **League-relative mode.** When a ``dim_stats`` baseline is supplied (the same
 per-rating mean/std pool ``player_builds`` already builds for the percentile
-caption), the ability dimensions — Athleticism, IQ, Skill, and the Scoring
+caption), the ability dimensions — Athleticism, Skill, and the Scoring
 *gates* — are first mapped onto a league-percentile scale (0-100 via the normal
 CDF of each rating's z-score) before being matched against the 10/50/90 anchors.
 So "50" means league-median, "90" means roughly top-30%, "10" bottom-30%: the
@@ -30,7 +30,7 @@ archetype reflects how a player ranks among peers rather than absolute rating
 values, which adapts to the league's power level. Without ``dim_stats`` the
 matcher falls back to the spreadsheet's original absolute behavior.
 
-Two things stay absolute by design: the Scoring *style* (the ins/dnk/2pt/3pt
+Two things stay absolute by design: the Scoring *style* (the  BSc, Elu, RtR, Hnd, Tck, PRs, RnS, PCv, PBk, RBk, ThV, ThP, ThA, KPw, KAc, PPw, PAc).
 mix, which is the player's intrinsic shot profile) and Height (which maps to
 real inches and shouldn't inflate with league quality).
 
@@ -48,67 +48,55 @@ import math
 # (no dim_stats) this is just the spreadsheet's raw >= 60 threshold.
 _SCORING_GATE = 60
 
-# --- Athleticism: (name, STR, SPD, JMP, END). Order matters for tie-breaking. ---
+# --- Athleticism: (name, STR, SPD, END). Order matters for tie-breaking. ---
 _ATHLETICISM = [
-    (None,            50, 50, 50, 50),
-    (None,            50, 50, 50, 90),
-    (None,            50, 50, 90, 50),
-    (None,            50, 50, 90, 90),
-    ('Quick',         50, 90, 50, 50),
-    ('Quick',         50, 90, 50, 90),
-    ('Athletic',      50, 90, 90, 50),
-    ('Athletic',      50, 90, 90, 90),
-    ('Physical',      90, 50, 50, 50),
-    ('Physical',      90, 50, 50, 90),
-    ('Powerful',      90, 50, 90, 50),
-    ('Powerful',      90, 50, 90, 90),
-    ('Explosive',     90, 90, 50, 50),
-    ('Explosive',     90, 90, 50, 90),
-    ('Freak Athlete', 90, 90, 90, 50),
-    ('Freak Athlete', 90, 90, 90, 90),
-    (None,            50, 50, 50, 10),
-    ('Below the Rim', 50, 50, 10, 50),
-    ('Below the Rim', 50, 50, 10, 10),
-    ('Slow',          50, 10, 50, 50),
-    ('Slow',          50, 10, 50, 10),
-    ('Sluggish',      50, 10, 10, 50),
-    ('Sluggish',      50, 10, 10, 10),
-    ('Soft',          10, 50, 50, 50),
-    ('Soft',          10, 50, 50, 10),
-    ('Fragile',       10, 50, 10, 50),
-    ('Fragile',       10, 50, 10, 10),
-    ('Unathletic',    10, 10, 50, 50),
-    ('Unathletic',    10, 10, 50, 10),
-    ('Unathletic',    10, 10, 10, 50),
-    ('Out of Shape',  10, 10, 10, 10),
-]
-
-# --- IQ: (name, OIQ, DIQ) ---
-_IQ = [
-    ('Raw',                10, 10),
-    ('Limited Offense',    10, 50),
-    ('Defense Specialist', 10, 90),
-    ('Limited Defense',    50, 10),
-    (None,                 50, 50),
-    ('Defensive',          50, 90),
-    ('Offense Specialist', 90, 10),
-    ('Offensive',          90, 50),
-    ('Two-Way',            90, 90),
+    (None,            50, 50, 50),
+    (None,            50, 50, 90),
+    (None,            50, 50, 90),
+    (None,            50, 50, 90),
+    ('Quick',         50, 90, 50),
+    ('Quick',         50, 90, 90),
+    ('Athletic',      50, 90, 90),
+    ('Athletic',      90, 90, 90),
+    ('Physical',      90, 50, 50),
+    ('Physical',      90, 50, 90),
+    ('Powerful',      90, 50, 90),
+    ('Powerful',      90, 50, 90),
+    ('Explosive',     90, 90, 50),
+    ('Explosive',     90, 90, 50),
+    ('Freak Athlete', 90, 90, 90),
+    ('Freak Athlete', 90, 90, 90),
+    (None,            50, 50, 50),
+    ('Below the Rim', 50, 50, 10),
+    ('Below the Rim', 50, 50, 10),
+    ('Slow',          50, 10, 50),
+    ('Slow',          50, 10, 10),
+    ('Sluggish',      50, 10, 50),
+    ('Sluggish',      50, 10, 10),
+    ('Soft',          10, 50, 50),
+    ('Soft',          10, 50, 10),
+    ('Fragile',       10, 50, 10),
+    ('Fragile',       10, 50, 10),
+    ('Unathletic',    10, 10, 50),
+    ('Unathletic',    10, 10, 50),
+    ('Unathletic',    10, 10, 10),
+    ('Out of Shape',  10, 10, 10),
 ]
 
 # --- Height: (name, position, anchor). Only rows matching the player's pos. ---
 _HEIGHT = [
-    (None,         'PG', 30),
-    ('Oversized',  'PG', 50),
-    (None,         'G',  30),
-    ('Oversized',  'G',  50),
-    (None,         'SG', 30),
-    (None,         'SG', 50),
-    ('Undersized', 'GF', 30),
-    (None,         'GF', 50),
-    ('Undersized', 'SF', 30),
-    (None,         'SF', 50),
-    ('Oversized',  'SF', 70),
+    (None,         'QB', 75,74,73),
+    ('Undersized'  'QB', 72,71,70,69,68),
+    ('Giant',      'QB', 76,77,78,79,80),
+    (None,         'RB', 70,71,72),
+    ('Giant',      'RB', 72,73,74,75),
+    ('Undersized', 'RB', 69,68,67,66),
+    ('Giant',      'WR', 75,76,77,78,79),
+    ('Undersized', 'WR', 71,70,69,68,67),
+    (None,         'WR', 72,73,74),
+    ('Undersized', 'TE', 30),
+    (None,         'TE', 50),
+    ('Oversized',  'TE', 70),
     (None,         'F',  50),
     ('Oversized',  'F',  70),
     (None,         'PF', 50),
@@ -117,10 +105,19 @@ _HEIGHT = [
     (None,         'FC', 70),
     ('Undersized', 'C',  50),
     (None,         'C',  70),
+    (None,         'FC', 70),
+    ('Undersized', 'C',  50),
+    (None,         'C',  70),
+    (None,         'FC', 70),
+    ('Undersized', 'C',  50),
+    (None,         'C',  70),
+    (None,         'FC', 70),
+    ('Undersized', 'C',  50),
+    (None,         'C',  70),
 ]
 
 # --- Scoring: (name, w_ins, w_dnk, w_2pt, w_3pt, gate). Gate(ratings, pos) -> bool. ---
-# Weights are target shares of (ins, dnk, 2pt, 3pt) scoring; match score is
+# Weights are target shares of (BSc, Elu, RtR, Hnd, Tck, PRs, RnS, PCv, PBk, RBk, ThV, ThP, ThA, KPw, KAc, PPw, PAc) scoring; match score is
 # 1 - sum(|share - weight|) / 2. A row only competes when its gate passes.
 # Gates receive ratings already on the gating scale (league-percentile when a
 # baseline is supplied, raw otherwise) and compare against _SCORING_GATE.
