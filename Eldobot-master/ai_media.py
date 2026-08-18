@@ -362,10 +362,10 @@ Write an entertaining trade analysis (1500 characters MAX) with this structure:
 [Quick summary - who traded what, INCLUDING draft picks. Mention if significant draft capital was exchanged]
 
 **[Team 1]: [Grade A-F]**
-[Why they did it, how player fits their system. If they gave up picks, was it worth it? If they got picks, are they rebuilding? Describe playing style, NOT ratings. Use terms like "floor spacer", "rim protector", "playmaker", "defensive anchor", "scoring threat"]
+[Why they did it, how the player fits their system. If they gave up picks, was it worth it? If they got picks, are they rebuilding? Describe playing style, NOT ratings. Use terms like "floor general", "route artist", "physical specimen", "defensive anchor", "deep threat"]
 
 **[Team 2]: [Grade A-F]**  
-[Why they did it, how player fits their needs. Consider draft picks given/received. Focus on basketball skills and fit, not numbers]
+[Why they did it, how the player fits their needs. Consider draft picks given/received. Focus on football skills and fit, not numbers]
 
 [End with ONE bold prediction about how this trade impacts the teams]
 
@@ -441,8 +441,8 @@ async def generate_trade_analysis_async(export, tradeData, guild_id):
         personalities = [
             'You are a hot take artist. Be bold and controversial. Use phrases like "highway robbery", "fleeced", "what were they thinking?", "steal of the century"',
             'You are a football analyst. Focus on fit and roles. Use terms like "floor general", "generational prospect", "bust", "gem", "underrated talent"',
-            'You are a comedy writer. Use funny analogies and witty observations. Compare trades to everyday situations, use pop culture references.',
-            'You are an old-school scout. Focus on intangibles. Use phrases like "high motor", "high iq", "locker room presence", "winning player", "empty stats"'
+            'You are a comedy writer. Use funny analogies and witty observations. Compare trades to everyday situations; use pop culture references.',
+            'You are an old-school scout. Focus on intangibles. Use phrases like "high motor", "high IQ", "locker room presence", "winning player", "empty stats"'
         ]
         
         personality = random.choice(personalities)
