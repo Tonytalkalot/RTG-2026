@@ -1,12 +1,12 @@
 """Canonical FBGM archetype namer.
 
-A faithful Python port of the community "BBGM Archetype Calculator v2.0"
+A faithful Python port of the community "FBGM Archetype Calculator v2.0"
 spreadsheet. Given a player's raw FBGM ratings + position, it produces the
 canonical archetype string, e.g.::
 
-    "Athletic Two-Way Shooting Point Forward"
-    "Oversized Powerful Defensive Paint Center"
-    "Prospect Guard"
+    "Athletic Deep Threat"
+    "Oversized Powerful Run Stopper"
+    "Prospect Dual Threat"
 
 The name is built by picking the best-matching descriptor from five ordered
 categories and concatenating them:
@@ -31,7 +31,7 @@ values, which adapts to the league's power level. Without ``dim_stats`` the
 matcher falls back to the spreadsheet's original absolute behavior.
 
 Two things stay absolute by design: the Scoring *style* (the  BSc, Elu, RtR, Hnd, Tck, PRs, RnS, PCv, PBk, RBk, ThV, ThP, ThA, KPw, KAc, PPw, PAc
-mix, which is the player's intrinsic shot profile) and Height (which maps to
+mix, which is the player's intrinsic skill set) and Height (which maps to
 real inches and shouldn't inflate with league quality).
 
 Note on tiers: the shipped spreadsheet's Prospect/Veteran prefix never fires
@@ -86,59 +86,99 @@ _ATHLETICISM = [
 # --- Height: (name, position, anchor). Only rows matching the player's pos. ---
 _HEIGHT = [
     (None,         'QB', 75,74,73),
-    ('Undersized'  'QB', 72,71,70,69,68),
-    ('Giant',      'QB', 76,77,78,79,80),
+    ('Undersized', 'QB', 72,71,70,69,68),
+    ('Big',        'QB', 76,77,78,79,80),
     (None,         'RB', 70,71,72),
-    ('Giant',      'RB', 72,73,74,75),
+    ('Huge',       'RB', 72,73,74,75),
     ('Undersized', 'RB', 69,68,67,66),
-    ('Giant',      'WR', 75,76,77,78,79),
+    ('Lanky',      'WR', 75,76,77,78,79),
     ('Undersized', 'WR', 71,70,69,68,67),
     (None,         'WR', 72,73,74),
-    ('Undersized', 'TE', 30),
-    (None,         'TE', 50),
-    ('Oversized',  'TE', 70),
-    (None,         'F',  50),
-    ('Oversized',  'F',  70),
-    (None,         'PF', 50),
-    (None,         'PF', 70),
-    ('Undersized', 'FC', 50),
-    (None,         'FC', 70),
-    ('Undersized', 'C',  50),
-    (None,         'C',  70),
-    (None,         'FC', 70),
-    ('Undersized', 'C',  50),
-    (None,         'C',  70),
-    (None,         'FC', 70),
-    ('Undersized', 'C',  50),
-    (None,         'C',  70),
-    (None,         'FC', 70),
-    ('Undersized', 'C',  50),
-    (None,         'C',  70),
+    ('Undersized', 'TE', 75,74,73),
+    (None,         'TE', 76,77),
+    ('Tall',       'TE', 78,79,80),
+    (None,         'OL', 77,78),
+    ('Husky',      'OL', 79,80,81,82),
+    ('Undersized', 'OL', 76,75,74,73),
+    ('Undersized', 'DL', 74,73,72,71),
+    ('Giant',      'DL', 77,78,79,80),
+    (None,         'DL', 75,76),
+    ('Undersized', 'LB', 74,73,72,71),
+    (None,         'LB', 75,76),
+    ('Lengthy',    'LB', 76,77,78,79),
+    ('Undersized', 'CB', 73,72,71,70),
+    (None,         'CB', 74,75),
+    ('Lanky',      'CB', 76,77,78,79),
+    ('Undersized', 'S',  71,70,69,68),
+    (None,         'S',  72,73),
+    ('Lanky',      'S',  73,74,75,76),
+    ('Undersized', 'K',  71,70,69),
+    (None,         'K',  72,73),
+    ('Tall',       'K',  74,75,76),
+    (None,         'p',  72,73),
+    ('Tall',       'p',  74,75,76),
+    ('Undersized', 'p',  71,70,69),
 ]
 
-# --- Scoring: (name, w_ins, w_dnk, w_2pt, w_3pt, gate). Gate(ratings, pos) -> bool. ---
-# Weights are target shares of (BSc, Elu, RtR, Hnd, Tck, PRs, RnS, PCv, PBk, RBk, ThV, ThP, ThA, KPw, KAc, PPw, PAc) scoring; match score is
+# --- Scoring: (name, w_BSc, w_Elu, w_RtR, w_Hnd, w_Tck, w_PRs, w_RnS, w_PCv, w_PBk, w_RBk, w_ThV, w_ThP, w_ThA, w_KPw, w_KAc, w_PPw, w_PAc, w_Spd, w_Str, w_Hgt gate). Gate(ratings, pos) -> bool. ---
+# Weights are target shares of (BSc, Elu, RtR, Hnd, Tck, PRs, RnS, PCv, PBk, RBk, ThV, ThP, ThA, KPw, KAc, PPw, PAc, Spd, Str, Hgt) scoring; match score is
 # 1 - sum(|share - weight|) / 2. A row only competes when its gate passes.
 # Gates receive ratings already on the gating scale (league-percentile when a
 # baseline is supplied, raw otherwise) and compare against _SCORING_GATE.
-def _g_three_level(ins, dnk, fg, tp, pos):
-    return ins >= _SCORING_GATE and dnk >= _SCORING_GATE and fg >= _SCORING_GATE and tp >= _SCORING_GATE
-def _g_three_point(ins, dnk, fg, tp, pos):
-    return tp >= _SCORING_GATE
-def _g_mid_range(ins, dnk, fg, tp, pos):
-    return fg >= _SCORING_GATE
-def _g_shooting(ins, dnk, fg, tp, pos):
-    return fg >= _SCORING_GATE and tp >= _SCORING_GATE
-def _g_slashing(ins, dnk, fg, tp, pos):
-    return dnk >= _SCORING_GATE and pos not in ('PF', 'FC', 'C')
-def _g_rim(ins, dnk, fg, tp, pos):
-    return dnk >= _SCORING_GATE and pos in ('PF', 'FC', 'C')
-def _g_paint(ins, dnk, fg, tp, pos):
-    return ins >= _SCORING_GATE
-def _g_inside_out(ins, dnk, fg, tp, pos):
-    return ins >= _SCORING_GATE and dnk >= _SCORING_GATE and tp >= _SCORING_GATE
-def _g_inside_arc(ins, dnk, fg, tp, pos):
-    return ins >= _SCORING_GATE and dnk >= _SCORING_GATE and fg >= _SCORING_GATE
+def _g_route_threat(RtR, Hnd, Elu, Spd, pos):
+    return RtR >= _SCORING_GATE and Hnd >= _SCORING_GATE and Elu >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('QB', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_speed_threat(RtR, Hnd, Spd, Elu, pos):
+    return RtR >= _SCORING_GATE and Hnd >= _SCORING_GATE and Elu >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('QB', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_catch_threat(RtR, Hnd, Spd, Hgt, pos):
+    return RtR >= _SCORING_GATE and Hnd >= _SCORING_GATE and Spd >= _SCORING_GATE and Hgt >= _SCORING_GATE and pos not in ('QB', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_big_arm(ThP, ThV, ThA, Hgt, pos):
+    return ThP >= _SCORING_GATE and ThV >= _SCORING_GATE and ThA >= _SCORING_GATE and Hgt >= _SCORING_GATE and pos not in ('WR', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_dual_threat(ThP, ThA, ThV, Spd, pos):
+    return ThP >= _SCORING_GATE and ThV >= _SCORING_GATE and ThA >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_run_threat(ThP, ThA, Elu, Spd, pos):
+    return ThP >= _SCORING_GATE and Elu >= _SCORING_GATE and ThA >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_tackle_breaker(Elu, Str, BSc, Spd, pos):
+    return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_juke_threat(Elu, Str, BSc, Spd, pos):
+    return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_block_help(PBk, Str, RBk, Hnd, pos):
+   return Str >= _SCORING_GATE and RBk >= _SCORING_GATE and PBk >= _SCORING_GATE and Hnd >= _SCORING_GATE and pos not in ('WR', 'QB', 'RB', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_vertical_threat(Hnd, Str, RBk, Spd, pos):
+    return Str >= _SCORING_GATE and RBk >= _SCORING_GATE and Spd >= _SCORING_GATE and Hnd >= _SCORING_GATE and pos not in ('WR', 'QB', 'RB', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_route_blocker(RtR, Hnd, RBk, Spd, pos):
+    return RtR >= _SCORING_GATE and RBk >= _SCORING_GATE and Spd >= _SCORING_GATE and Hnd >= _SCORING_GATE and pos not in ('WR', 'QB', 'RB', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_full_wall(PBk, Str, RBk, Spd, pos):
+   return Str >= _SCORING_GATE and PBk >= _SCORING_GATE and RBk >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'RB', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_rushing_wall(RBk, Str, PBk, Spd, pos):
+    return Str >= _SCORING_GATE and PBk >= _SCORING_GATE and RBk >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'RB', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_all_around(RBk, Str, PBk, Spd, pos):
+    return Str >= _SCORING_GATE and PBk >= _SCORING_GATE and RBk >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'RB', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_run_stop(RnS, Str, PRs, Tck, pos):
+   return Str >= _SCORING_GATE and RnS >= _SCORING_GATE and PRs >= _SCORING_GATE and Tck >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'RB', 'CB', 'S', 'K', 'P', 'LB')
+def _g_Speed_rush(PRs, Str, Tck, Spd, pos):
+    return Str >= _SCORING_GATE and Spd >= _SCORING_GATE and PRs >= _SCORING_GATE and Tck >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'RB', 'CB', 'S', 'K', 'P', 'LB')
+def _g_game_wreck(RnS, Spd, PRs, Str, pos):
+    return Str >= _SCORING_GATE and Spd >= _SCORING_GATE and PRs >= _SCORING_GATE and RnS >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'RB', 'CB', 'S', 'K', 'P', 'LB')
+def _g_patient_feet(Str, PCv, Tck, Spd, pos):
+   return Str >= _SCORING_GATE and Tck >= _SCORING_GATE and PCv >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'RB', 'S', 'K', 'P', 'LB')
+def _g_ball_artist(Hgt, PCv, Tck, Spd, pos):
+   return Hgt >= _SCORING_GATE and Tck >= _SCORING_GATE and PCv >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'RB', 'S', 'K', 'P', 'LB')
+def _g_slot_back(Str, PCv, Tck, Spd, pos):
+     return Str >= _SCORING_GATE and Tck >= _SCORING_GATE and PCv >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'RB', 'S', 'K', 'P', 'LB')
+def _g_line_threat(Elu, Str, BSc, Spd, pos):
+   return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'RB')
+def _g_tackle_breaker(Elu, Str, BSc, Spd, pos):
+    return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'RB')
+def _g_juke_threat(Elu, Str, BSc, Spd, pos):
+    return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'RB')
+def _g_line_threat(Elu, Str, BSc, Spd, pos):
+   return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P')
+def _g_line_threat(Elu, Str, BSc, Spd, pos):
+   return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P')
+def _g_line_threat(Elu, Str, BSc, Spd, pos):
+   return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P')
+
+
 
 _SCORING = [
     ('Three-Level',    0.25, 0.25, 0.25, 0.25, _g_three_level),
@@ -154,11 +194,11 @@ _SCORING = [
 
 # --- Prospect position groups ---
 _PROSPECT_GROUP = {
-    'PG': 'Guard', 'G': 'Guard', 'SG': 'Guard',
-    'GF': 'Wing',
-    'SF': 'Forward', 'F': 'Forward', 'PF': 'Forward',
-    'FC': 'Big',
-    'C': 'Center',
+    'QB': 'Guard', 'G': 'Guard', 'SG': 'Guard',
+    'WR': 'Wing',
+    'RB': 'Forward', 'F': 'Forward', 'PF': 'Forward',
+    'OL': 'Big',
+    'DL': 'Center',
 }
 
 _SKILL = {
@@ -389,9 +429,9 @@ def _tier(ovr, age):
 
 def archetype(ratings, position, ovr=None, age=None, dim_stats=None,
               max_adjectives=None):
-    """Return the canonical BBGM archetype string for a player.
+    """Return the canonical FBGM archetype string for a player.
 
-    `ratings` is a BBGM ratings dict (keys: hgt, stre, spd, jmp, endu, ins, dnk,
+    `ratings` is a FBGM ratings dict (keys: hgt, stre, spd, jmp, endu, ins, dnk,
     ft, fg, tp, oiq, diq, drb, pss, reb). `position` is the BBGM pos string
     (PG/SG/SF/PF/C/G/GF/F/FC). `ovr`/`age` drive the Prospect/Veteran tier; if
     omitted, `ovr` falls back to ratings['ovr'] and tiers requiring age are
@@ -399,13 +439,13 @@ def archetype(ratings, position, ovr=None, age=None, dim_stats=None,
 
     `dim_stats` is an optional per-rating {key: (mean, std)} league baseline
     (as produced by player_builds._league_dim_stats). When supplied, the ability
-    dimensions (Athleticism, IQ, Skill) and the Scoring gates are matched on the
+    dimensions (Athleticism, Skill) and the Scoring gates are matched on the
     league-percentile scale instead of raw ratings — see the module docstring.
     Scoring style and Height remain absolute either way.
 
     `max_adjectives` caps how many descriptors precede the skill noun: the skill
     noun (the identity) is always kept, and only the N most distinctive adjectives
-    (Height/Athleticism/IQ/Scoring — whichever the player deviates from average on
+    (Height/Athleticism/Scoring — whichever the player deviates from average on
     most) survive; the rest are dropped to keep labels short. None = keep all
     (faithful to the spreadsheet). The Veteran tier prefix is always kept and does
     not count toward the cap.
