@@ -39,7 +39,7 @@ P_SPEC = 98
 ELITE_PCTILE = 5
 STAR_PCTILE = 2
 
-_RATING_KEYS = ('tp', 'ft', 'ins', 'dnk', 'pss', 'drb', 'spd', 'jmp', 'diq', 'reb', 'hgt', 'stre', 'oiq', 'endu', 'fg')
+_RATING_KEYS = ('BSc', 'Elu', 'RtR', 'Hnd', 'Tck', 'PRs', 'RnS', 'PCv', 'PBk', 'RBk', 'ThV', 'ThP', 'ThA', 'KPw', 'KAc', 'PPw', 'PAc', 'Spd', 'Str', 'Hgt')
 
 
 def _ratings_for_season(p, season):
@@ -145,7 +145,7 @@ def _league_dim_stats(players, season=None):
     return out
 
 
-_RANK_RAW_KEYS = ('tp','ft','dnk','drb','pss','spd','jmp','diq','ins','stre','reb','oiq','fg')
+_RANK_RAW_KEYS = ('BSc', 'Elu', 'RtR', 'Hnd', 'Tck', 'PRs', 'RnS', 'PCv', 'PBk', 'RBk', 'ThV', 'ThP', 'ThA', 'KPw', 'KAc', 'PPw', 'PAc', 'Spd', 'Str', 'Hgt')
 
 
 def _composites_for(r, dim_stats):
