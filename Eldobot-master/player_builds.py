@@ -1,18 +1,18 @@
-"""Compositional playstyle classifier using 2K's actual build vocabulary.
+"""Compositional playstyle classifier using CFB actual build vocabulary.
 
-Names players by mapping their BBGM rating clusters onto the same 250+ build
-names NBA 2K25/2K26 use. The catalog and naming pattern come straight from 2K
-(prefixes 2 Way / Diming / Stretch / Inside Out / 3 Level / Glass Cleaning /
-Slashing / Sharpshooting / Playmaking, plus evocative primary nouns); only the
+Names players by mapping their FBGM rating clusters onto the same 250+ build
+names CFB NCAA25/26 use. The catalog and naming pattern come straight from CFB
+(prefixes 2 Way / Pocket Passer / Dual Threat /  Pure Runner / Backfield Creator / Receiving TE /
+Edge Rusher / Deep Threat / Lockdown Corner, plus evocative primary nouns); only the
 classification formulas underneath are our own.
 
 Z-score normalizes against the league's own rating distribution so a player
-who's the league's best shooter gets the elite shooter label whether their
+who's the league's best player gets the elite player label whether their
 raw rating is 75 or 95.
 """
 
 # Normalized-rating thresholds — every atom is now stored as its percentile rank
-# (0=worst in league, 100=best). 2K-style: one consistent 0-100 scale everywhere.
+# (0=worst in league, 100=best). CFB-style: one consistent 0-100 scale everywhere.
 # Approximate percentile values for the bell-curve equivalents:
 #   z=-0.5  -> ~31st pctile -> WEAK
 #   z= 0.35 -> ~64th        -> SOFT  (2-Way prefix bar)
