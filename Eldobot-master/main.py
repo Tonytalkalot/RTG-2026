@@ -437,7 +437,7 @@ async def on_message(message):
                     except Exception as e:
                         print(f"Suggestion error: {e}")
                         await safe_send(message.channel, f"Command not found. Use **{prefix}help** to see available commands.")
-tk = os.environ.get("DISCORD_TOKEN")
+tk = os.environ.get("MTUzOTQ4MDQxMjk4MjYxNjEyNA.Gb3SOE.Mhll80Aq7oDdqqdn-OvPjBNdkLtTU6LW3dL0-8")
 if not tk:
     f = open("token.txt","r")
     for line in f:
