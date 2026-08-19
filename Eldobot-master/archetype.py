@@ -6,7 +6,7 @@ canonical archetype string, e.g.::
 
     "Athletic Deep Threat"
     "Oversized Powerful Run Stopper"
-    "Prospect Dual Threat"
+    "Prospect Scrambler"
 
 The name is built by picking the best-matching descriptor from five ordered
 categories and concatenating them:
@@ -115,9 +115,9 @@ _HEIGHT = [
     ('Undersized', 'K',  71,70,69),
     (None,         'K',  72,73),
     ('Tall',       'K',  74,75,76),
-    (None,         'p',  72,73),
-    ('Tall',       'p',  74,75,76),
-    ('Undersized', 'p',  71,70,69),
+    (None,         'P',  72,73),
+    ('Tall',       'P',  74,75,76),
+    ('Undersized', 'P',  71,70,69),
 ]
 
 # --- Scoring: (name, w_BSc, w_Elu, w_RtR, w_Hnd, w_Tck, w_PRs, w_RnS, w_PCv, w_PBk, w_RBk, w_ThV, w_ThP, w_ThA, w_KPw, w_KAc, w_PPw, w_PAc, w_Spd, w_Str, w_Hgt gate). Gate(ratings, pos) -> bool. ---
@@ -131,12 +131,12 @@ def _g_speed_threat(RtR, Hnd, Spd, Elu, pos):
     return RtR >= _SCORING_GATE and Hnd >= _SCORING_GATE and Elu >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('QB', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
 def _g_catch_threat(RtR, Hnd, Spd, Hgt, pos):
     return RtR >= _SCORING_GATE and Hnd >= _SCORING_GATE and Spd >= _SCORING_GATE and Hgt >= _SCORING_GATE and pos not in ('QB', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
-def _g_big_arm(ThP, ThV, ThA, Hgt, pos):
+def _g_big_arm(ThP, ThA, ThV, Hgt, pos):
     return ThP >= _SCORING_GATE and ThV >= _SCORING_GATE and ThA >= _SCORING_GATE and Hgt >= _SCORING_GATE and pos not in ('WR', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
 def _g_dual_threat(ThP, ThA, ThV, Spd, pos):
     return ThP >= _SCORING_GATE and ThV >= _SCORING_GATE and ThA >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
-def _g_run_threat(ThP, ThA, Elu, Spd, pos):
-    return ThP >= _SCORING_GATE and Elu >= _SCORING_GATE and ThA >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
+def _g_run_threat(ThP, ThA, ThV, Spd, pos):
+    return ThP >= _SCORING_GATE and ThV >= _SCORING_GATE and ThA >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
 def _g_tackle_breaker(Elu, Str, BSc, Spd, pos):
     return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB')
 def _g_juke_threat(Elu, Str, BSc, Spd, pos):
@@ -165,141 +165,119 @@ def _g_ball_artist(Hgt, PCv, Tck, Spd, pos):
    return Hgt >= _SCORING_GATE and Tck >= _SCORING_GATE and PCv >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'RB', 'S', 'K', 'P', 'LB')
 def _g_slot_back(Str, PCv, Tck, Spd, pos):
      return Str >= _SCORING_GATE and Tck >= _SCORING_GATE and PCv >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'RB', 'S', 'K', 'P', 'LB')
-def _g_line_threat(Elu, Str, BSc, Spd, pos):
-   return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'RB')
-def _g_tackle_breaker(Elu, Str, BSc, Spd, pos):
-    return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'RB')
-def _g_juke_threat(Elu, Str, BSc, Spd, pos):
-    return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'RB')
-def _g_line_threat(Elu, Str, BSc, Spd, pos):
-   return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P')
-def _g_line_threat(Elu, Str, BSc, Spd, pos):
-   return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P')
-def _g_line_threat(Elu, Str, BSc, Spd, pos):
-   return Str >= _SCORING_GATE and Elu >= _SCORING_GATE and BSc >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P')
+def _g_zone_hawk(Str, PCv, Tck, Spd, pos):
+    return Str >= _SCORING_GATE and Tck >= _SCORING_GATE and PCv >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'RB', 'CB', 'K', 'P', 'LB')
+def _g_pick_artist(Str, PCv, Tck, Spd, pos):
+   return Str >= _SCORING_GATE and Tck >= _SCORING_GATE and PCv >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'RB', 'CB', 'K', 'P', 'LB')
+def _g_tackle_machine(Str, PCv, Tck, Spd, pos):
+  return Str >= _SCORING_GATE and Tck >= _SCORING_GATE and PCv >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'RB', 'CB', 'K', 'P', 'LB')
+def _g_zone_backer(RnS, PCv, Tck, Spd, pos):
+   return RnS >= _SCORING_GATE and Tck >= _SCORING_GATE and PCv >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'RB', 'CB', 'K', 'P', 'S')
+def _g_gap_filler(RnS, PRs, Tck, Spd, pos):
+   return RnS >= _SCORING_GATE and Tck >= _SCORING_GATE and PRs >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'RB', 'CB', 'K', 'P', 'S')
+def _g_hybrid_back(RnS, PCv, Tck, Spd, pos):
+    return RnS >= _SCORING_GATE and Tck >= _SCORING_GATE and PCv >= _SCORING_GATE and Spd >= _SCORING_GATE and pos not in ('WR', 'QB', 'TE', 'OL', 'DL', 'RB', 'CB', 'K', 'P', 'S')
 
 
 
 _SCORING = [
-    ('Three-Level',    0.25, 0.25, 0.25, 0.25, _g_three_level),
-    ('Three Point',    0.20, 0.20, 0.20, 0.40, _g_three_point),
-    ('Mid-Range',      0.20, 0.20, 0.40, 0.20, _g_mid_range),
-    ('Shooting',       0.17, 0.17, 0.33, 0.33, _g_shooting),
-    ('Slashing',       0.20, 0.40, 0.20, 0.20, _g_slashing),
-    ('Rim',            0.20, 0.40, 0.20, 0.20, _g_rim),
-    ('Paint',          0.40, 0.20, 0.20, 0.20, _g_paint),
-    ('Inside Out',     0.29, 0.29, 0.13, 0.29, _g_inside_out),
-    ('Inside the Arc', 0.29, 0.29, 0.29, 0.13, _g_inside_arc),
+    ('Route-Threat',    0.25, 0.25, 0.25, 0.25, _g_route_threat),
+    ('Speed-Threat',    0.20, 0.20, 0.20, 0.40, _g_speed_threat),
+    ('Catch-Threat',      0.20, 0.20, 0.40, 0.20, _g_catch_threat),
+    ('Big-Arm',       0.17, 0.17, 0.33, 0.33, _g_big_arm),
+    ('Dual-Threat',       0.20, 0.40, 0.20, 0.20, _g_dual_threat),
+    ('Run-Threat',            0.20, 0.40, 0.20, 0.20, _g_run_threat),
+    ('Tackle-Breaker',          0.40, 0.20, 0.20, 0.20, _g_tackle_breaker),
+    ('Juke-Threat',     0.29, 0.29, 0.13, 0.29, _g_juke_threat),
+    ('Block-Help', 0.29, 0.29, 0.29, 0.13, _g_block_help),
+    ('Vertical-Threat',0.25, 0.25, 0.25, 0.25, _g_vertical_threat),
+    ('Route-Blocker',  0.20, 0.20, 0.20, 0.40, _g_route_blocker),
+    ('Full-Wall',      0.20, 0.20, 0.40, 0.20, _g_full_wall),
+    ('Rushing-Wall',   0.17, 0.17, 0.33, 0.33, _g_rushing_wall),
+    ('All-Around',     0.20, 0.40, 0.20, 0.20, _g_all_around),
+    ('Run-Stop',       0.20, 0.40, 0.20, 0.20, _g_run_stop),
+    ('Speed-Rush',     0.40, 0.20, 0.20, 0.20, _g_Speed_rush),
+    ('Game-Wreck',     0.29, 0.29, 0.13, 0.29, _g_game_wreck),
+    ('Patient-Feet',   0.29, 0.29, 0.29, 0.13, _g_patient_feet),
+    ('Ball-Artist',    0.25, 0.25, 0.25, 0.25, _g_ball_artist),
+    ('Slot-Back',      0.20, 0.20, 0.20, 0.40, _g_slot_back),
+    ('Zone-Hawk',      0.20, 0.20, 0.40, 0.20, _g_zone_hawk),
+    ('Pick-Artist',    0.17, 0.17, 0.33, 0.33, _g_pick_artist),
+    ('Tackle-Machine', 0.20, 0.40, 0.20, 0.20, _g_tackle_machine),
+    ('Zone-Backer',            0.20, 0.40, 0.20, 0.20, _g_zone_backer),
+    ('Gap-Filler',          0.40, 0.20, 0.20, 0.20, _g_gap_filler),
+    ('Hybrid-Back',     0.29, 0.29, 0.13, 0.29, _g_hybrid_back),
 ]
 
 # --- Prospect position groups ---
 _PROSPECT_GROUP = {
-    'QB': 'Guard', 'G': 'Guard', 'SG': 'Guard',
-    'WR': 'Wing',
-    'RB': 'Forward', 'F': 'Forward', 'PF': 'Forward',
-    'OL': 'Big',
-    'DL': 'Center',
+    'QB': 'Quarter-Back', 
+    'WR': 'Receiver',
+    'RB': 'Wing-Back', 
+    'OL': 'O-Line',
+    'DL': 'D-Line',
+    'LB': 'Backer', 
+    'CB': 'Corner',
+    'S':  'Safety', 
+    'TE': 'Tight-End',
+    'K':  'Kicker',
+    'P':  'Punter',
 }
 
 _SKILL = {
-    'PG': {
-        (10, 10, 10): 'Off-Ball Guard', (10, 10, 50): 'Off-Ball Guard', (10, 10, 90): 'Hustle Guard',
-        (10, 50, 10): 'Point Guard', (10, 50, 50): 'Point Guard', (10, 50, 90): 'Point Guard',
-        (10, 90, 10): 'Distributor Guard', (10, 90, 50): 'Distributor Guard', (10, 90, 90): 'Distributor Guard',
-        (50, 10, 10): 'Point Guard', (50, 10, 50): 'Point Guard', (50, 10, 90): 'Point Guard',
-        (50, 50, 10): 'Point Guard', (50, 50, 50): 'Point Guard', (50, 50, 90): 'Point Guard',
-        (50, 90, 10): 'Facilitator Guard', (50, 90, 50): 'Facilitator Guard', (50, 90, 90): 'Facilitator Guard',
-        (90, 10, 10): 'Shot Creator Guard', (90, 10, 50): 'Shot Creator Guard', (90, 10, 90): 'Shot Creator Guard',
-        (90, 50, 10): 'Shot Creator Guard', (90, 50, 50): 'Shot Creator Guard', (90, 50, 90): 'Shot Creator Guard',
-        (90, 90, 10): 'Playmaker', (90, 90, 50): 'Playmaker', (90, 90, 90): 'Playmaker',
+    'QB': {
+        (10, 10, 10): 'Strong Arm', 
+        (10, 50, 10): 'Scrambler', 
+        (10, 90, 10): 'Field General',
+      
     },
-    'G': {
-        (10, 10, 10): 'Off-Ball Guard', (10, 10, 50): 'Off-Ball Guard', (10, 10, 90): 'Hustle Guard',
-        (10, 50, 10): 'Combo Guard', (10, 50, 50): 'Combo Guard', (10, 50, 90): 'Combo Guard',
-        (10, 90, 10): 'Distributor Guard', (10, 90, 50): 'Distributor Guard', (10, 90, 90): 'Distributor Guard',
-        (50, 10, 10): 'Combo Guard', (50, 10, 50): 'Combo Guard', (50, 10, 90): 'Combo Guard',
-        (50, 50, 10): 'Combo Guard', (50, 50, 50): 'Combo Guard', (50, 50, 90): 'Combo Guard',
-        (50, 90, 10): 'Facilitator Guard', (50, 90, 50): 'Facilitator Guard', (50, 90, 90): 'Facilitator Guard',
-        (90, 10, 10): 'Shot Creator Guard', (90, 10, 50): 'Shot Creator Guard', (90, 10, 90): 'Shot Creator Guard',
-        (90, 50, 10): 'Shot Creator Guard', (90, 50, 50): 'Shot Creator Guard', (90, 50, 90): 'Shot Creator Guard',
-        (90, 90, 10): 'Playmaker', (90, 90, 50): 'Playmaker', (90, 90, 90): 'Playmaker',
+    'RB': {
+        (10, 10, 10): 'Elusive', 
+        (10, 50, 10): 'Power', 
+        (10, 90, 10): 'Receiving',  
+      
     },
-    'SG': {
-        (10, 10, 10): 'Off-Ball Guard', (10, 10, 50): 'Off-Ball Guard', (10, 10, 90): 'Hustle Guard',
-        (10, 50, 10): 'Shooting Guard', (10, 50, 50): 'Shooting Guard', (10, 50, 90): 'Shooting Guard',
-        (10, 90, 10): 'Distributor Guard', (10, 90, 50): 'Distributor Guard', (10, 90, 90): 'Distributor Guard',
-        (50, 10, 10): 'Shooting Guard', (50, 10, 50): 'Shooting Guard', (50, 10, 90): 'Shooting Guard',
-        (50, 50, 10): 'Shooting Guard', (50, 50, 50): 'Shooting Guard', (50, 50, 90): 'Shooting Guard',
-        (50, 90, 10): 'Facilitator Guard', (50, 90, 50): 'Facilitator Guard', (50, 90, 90): 'Facilitator Guard',
-        (90, 10, 10): 'Shot Creator Guard', (90, 10, 50): 'Shot Creator Guard', (90, 10, 90): 'Shot Creator Guard',
-        (90, 50, 10): 'Shot Creator Guard', (90, 50, 50): 'Shot Creator Guard', (90, 50, 90): 'Shot Creator Guard',
-        (90, 90, 10): 'Playmaker', (90, 90, 50): 'Playmaker', (90, 90, 90): 'Playmaker',
+    'WR': {
+        (10, 10, 10): 'Slot', 
+        (10, 50, 10): 'Physical', 
+        (10, 90, 10): 'Deep Threat', 
+     
     },
-    'GF': {
-        (10, 10, 10): 'Off-Ball Wing', (10, 10, 50): 'Off-Ball Wing', (10, 10, 90): 'Hustle Wing',
-        (10, 50, 10): 'Wing', (10, 50, 50): 'Wing', (10, 50, 90): 'Wing',
-        (10, 90, 10): 'Distributor Wing', (10, 90, 50): 'Distributor Wing', (10, 90, 90): 'Distributor Wing',
-        (50, 10, 10): 'Wing', (50, 10, 50): 'Wing', (50, 10, 90): 'Wing',
-        (50, 50, 10): 'Wing', (50, 50, 50): 'Wing', (50, 50, 90): 'Wing',
-        (50, 90, 10): 'Facilitator Wing', (50, 90, 50): 'Facilitator Wing', (50, 90, 90): 'Facilitator Wing',
-        (90, 10, 10): 'Shot Creator Wing', (90, 10, 50): 'Shot Creator Wing', (90, 10, 90): 'Shot Creator Wing',
-        (90, 50, 10): 'Shot Creator Wing', (90, 50, 50): 'Shot Creator Wing', (90, 50, 90): 'Shot Creator Wing',
-        (90, 90, 10): 'Point Wing', (90, 90, 50): 'Point Wing', (90, 90, 90): 'Point Wing',
+    'TE': {
+        (10, 10, 10): 'Vertical', 
+        (10, 50, 10): 'Possession', 
+        (10, 90, 10): 'Blocking', 
+        
     },
-    'SF': {
-        (10, 10, 10): 'Off-Ball Forward', (10, 10, 50): 'Off-Ball Forward', (10, 10, 90): 'Hustle Forward',
-        (10, 50, 10): 'Small Forward', (10, 50, 50): 'Small Forward', (10, 50, 90): 'Small Forward',
-        (10, 90, 10): 'Distributor Forward', (10, 90, 50): 'Distributor Forward', (10, 90, 90): 'Distributor Forward',
-        (50, 10, 10): 'Small Forward', (50, 10, 50): 'Small Forward', (50, 10, 90): 'Small Forward',
-        (50, 50, 10): 'Small Forward', (50, 50, 50): 'Small Forward', (50, 50, 90): 'Small Forward',
-        (50, 90, 10): 'Facilitator Forward', (50, 90, 50): 'Facilitator Forward', (50, 90, 90): 'Facilitator Forward',
-        (90, 10, 10): 'Shot Creator Forward', (90, 10, 50): 'Shot Creator Forward', (90, 10, 90): 'Shot Creator Forward',
-        (90, 50, 10): 'Shot Creator Forward', (90, 50, 50): 'Shot Creator Forward', (90, 50, 90): 'Shot Creator Forward',
-        (90, 90, 10): 'Point Forward', (90, 90, 50): 'Point Forward', (90, 90, 90): 'Point Forward',
+    'OL': {
+        (10, 10, 10): 'Agile', 
+        (10, 50, 10): 'Run Block', 
+        (10, 90, 10): 'Pass Block',
+      
     },
-    'F': {
-        (10, 10, 10): 'Off-Ball Forward', (10, 10, 50): 'Off-Ball Forward', (10, 10, 90): 'Rebounding Forward',
-        (10, 50, 10): 'Forward', (10, 50, 50): 'Forward', (10, 50, 90): 'Forward',
-        (10, 90, 10): 'Distributor Forward', (10, 90, 50): 'Distributor Forward', (10, 90, 90): 'Distributor Forward',
-        (50, 10, 10): 'Forward', (50, 10, 50): 'Forward', (50, 10, 90): 'Forward',
-        (50, 50, 10): 'Forward', (50, 50, 50): 'Forward', (50, 50, 90): 'Forward',
-        (50, 90, 10): 'Facilitator Forward', (50, 90, 50): 'Facilitator Forward', (50, 90, 90): 'Facilitator Forward',
-        (90, 10, 10): 'Shot Creator Forward', (90, 10, 50): 'Shot Creator Forward', (90, 10, 90): 'Shot Creator Forward',
-        (90, 50, 10): 'Shot Creator Forward', (90, 50, 50): 'Shot Creator Forward', (90, 50, 90): 'Shot Creator Forward',
-        (90, 90, 10): 'Point Forward', (90, 90, 50): 'Point Forward', (90, 90, 90): 'Point Forward',
+    'LB': {
+        (10, 10, 10): 'Speed Rusher', 
+        (10, 50, 10): 'Run Stopper', 
+        (10, 90, 10): 'Pass Rusher', 
+     
     },
     'PF': {
-        (10, 10, 10): 'Off-Ball Forward', (10, 10, 50): 'Off-Ball Forward', (10, 10, 90): 'Rebounding Forward',
-        (10, 50, 10): 'Power Forward', (10, 50, 50): 'Power Forward', (10, 50, 90): 'Power Forward',
-        (10, 90, 10): 'Distributor Forward', (10, 90, 50): 'Distributor Forward', (10, 90, 90): 'Distributor Forward',
-        (50, 10, 10): 'Power Forward', (50, 10, 50): 'Power Forward', (50, 10, 90): 'Power Forward',
-        (50, 50, 10): 'Power Forward', (50, 50, 50): 'Power Forward', (50, 50, 90): 'Power Forward',
-        (50, 90, 10): 'Facilitator Forward', (50, 90, 50): 'Facilitator Forward', (50, 90, 90): 'Facilitator Forward',
-        (90, 10, 10): 'Shot Creator Forward', (90, 10, 50): 'Shot Creator Forward', (90, 10, 90): 'Shot Creator Forward',
-        (90, 50, 10): 'Shot Creator Forward', (90, 50, 50): 'Shot Creator Forward', (90, 50, 90): 'Shot Creator Forward',
-        (90, 90, 10): 'Point Forward', (90, 90, 50): 'Point Forward', (90, 90, 90): 'Point Forward',
+        (10, 10, 10): 'Pass Defender',
+        (10, 50, 10): 'Edge Rusher', 
+        (10, 90, 10): 'Run Stuffer',
+  
     },
-    'FC': {
-        (10, 10, 10): 'Off-Ball Big', (10, 10, 50): 'Off-Ball Big', (10, 10, 90): 'Rebounding Big',
-        (10, 50, 10): 'Big Man', (10, 50, 50): 'Big Man', (10, 50, 90): 'Big Man',
-        (10, 90, 10): 'Distributor Big', (10, 90, 50): 'Distributor Big', (10, 90, 90): 'Distributor Big',
-        (50, 10, 10): 'Big Man', (50, 10, 50): 'Big Man', (50, 10, 90): 'Rebounding Big',
-        (50, 50, 10): 'Big Man', (50, 50, 50): 'Big Man', (50, 50, 90): 'Big Man',
-        (50, 90, 10): 'Facilitator Big', (50, 90, 50): 'Facilitator Big', (50, 90, 90): 'Facilitator Big',
-        (90, 10, 10): 'Face Up Big', (90, 10, 50): 'Face Up Big', (90, 10, 90): 'Face Up Big',
-        (90, 50, 10): 'Face Up Big', (90, 50, 50): 'Face Up Big', (90, 50, 90): 'Face Up Big',
-        (90, 90, 10): 'Point Center', (90, 90, 50): 'Point Center', (90, 90, 90): 'Point Center',
+    'CB': {
+        (10, 10, 10): 'Slot', 
+        (10, 50, 10): 'Man',
+        (10, 90, 10): 'Zone', 
+    
     },
-    'C': {
-        (10, 10, 10): 'Off-Ball Center', (10, 10, 50): 'Off-Ball Center', (10, 10, 90): 'Rebounding Center',
-        (10, 50, 10): 'Center', (10, 50, 50): 'Center', (10, 50, 90): 'Center',
-        (10, 90, 10): 'Distributor Center', (10, 90, 50): 'Distributor Center', (10, 90, 90): 'Distributor Center',
-        (50, 10, 10): 'Center', (50, 10, 50): 'Center', (50, 10, 90): 'Center',
-        (50, 50, 10): 'Center', (50, 50, 50): 'Center', (50, 50, 90): 'Center',
-        (50, 90, 10): 'Facilitator Center', (50, 90, 50): 'Facilitator Center', (50, 90, 90): 'Facilitator Center',
-        (90, 10, 10): 'Face Up Center', (90, 10, 50): 'Face Up Center', (90, 10, 90): 'Face Up Center',
-        (90, 50, 10): 'Face Up Center', (90, 50, 50): 'Face Up Center', (90, 50, 90): 'Face Up Center',
-        (90, 90, 10): 'Point Center', (90, 90, 50): 'Point Center', (90, 90, 90): 'Point Center',
+    'S': {
+        (10, 10, 10): 'Hybrid', 
+        (10, 50, 10): 'Run Support', 
+        (10, 90, 10): 'Coverage', 
+     
     },
 }
 
@@ -341,19 +319,19 @@ def _height(pos, hgt):
     return best_name
 
 
-def _scoring(ins, dnk, fg, tp, gate_ins, gate_dnk, gate_fg, gate_tp, pos):
+def _scoringBSc,(Elu, RtR, Hnd, Tck, PRs, RnS, PCv, PBk, RBk, ThV, ThP, ThA, KPw, KAc, PPw, PAc, Spd, Str, Hgt, gate_Elu, gate_RtR, gate_Hnd, gate_Tck, gate_PRs, gate_RnS, gate_PCv, gate_PBk, gate_RBk, gate_ThV, gate_ThP, gate_ThA, gate_KPw, gate_KAc, gate_PPW, gate_PAc, gate_Spd, gate_Str, gate_Hgt ,pos):
     """Scoring descriptor + distinctiveness, as (word, dist). Shares (style) come
-    from the raw ins/dnk/fg/tp; the gates that decide which descriptors a player
+    from the raw Elu/RtR/Hnd/Tck/PRs/RnS/PCv/PBk/RBk/ThV/ThP/ThA/KPw/KAc/PPw/PAc/Spd/Str/Hgt; the gates that decide which descriptors a player
     qualifies for use the gate_* values (league-percentile in relative mode, else
     equal to raw). `dist` (0-1+) measures how lopsided the scoring profile is —
     used to rank descriptors when labels are trimmed."""
-    total = ins + dnk + fg + tp
+    total = Elu+RtR+Hnd+Tck+PRs+RnS+PCv+PBk+RBk+ThV+ThP+ThA+KPw+KAc+PPw+PAc+Spd+Str+Hgt
     if total <= 0:
         return ('', 0.0)
-    shares = (ins / total, dnk / total, fg / total, tp / total)
+    shares = (Elu/RtR/Hnd/Tck/PRs/RnS/PCv/PBk/RBk/ThV/ThP/ThA/KPw/KAc/PPw/PAc/Spd/Str/Hgt/total)
     best_name, best_score = '', 0.0
     for name, wi, wd, w2, w3, gate in _SCORING:
-        if not gate(gate_ins, gate_dnk, gate_fg, gate_tp, pos):
+        if not gate(gate_Elu, gate_RtR, gate_Hnd, gate_Tck, gate_PRs, gate_RnS, gate_PCv, gate_PBk, gate_RBk, gate_ThV, gate_ThP, gate_ThA, gate_KPw, gate_KAc, gate_PPW, gate_PAc, gate_Spd, gate_Str, gate_Hgt, pos):
             continue
         weights = (wi, wd, w2, w3)
         diff = sum(abs(s - w) for s, w in zip(shares, weights))
@@ -431,9 +409,8 @@ def archetype(ratings, position, ovr=None, age=None, dim_stats=None,
               max_adjectives=None):
     """Return the canonical FBGM archetype string for a player.
 
-    `ratings` is a FBGM ratings dict (keys: hgt, stre, spd, jmp, endu, ins, dnk,
-    ft, fg, tp, oiq, diq, drb, pss, reb). `position` is the BBGM pos string
-    (PG/SG/SF/PF/C/G/GF/F/FC). `ovr`/`age` drive the Prospect/Veteran tier; if
+    `ratings` is a FBGM ratings dict (keys: BSc, Elu, RtR, Hnd, Tck, PRs, RnS, PCv, PBk, RBk, ThV, ThP, ThA, KPw, KAc, PPw, PAc, Spd, Hgt, Str). `position` is the FBGM pos string
+    (QB/RB/WR/TE/OL/DL/LB/CB/S/K/P). `ovr`/`age` drive the Prospect/Veteran tier; if
     omitted, `ovr` falls back to ratings['ovr'] and tiers requiring age are
     skipped.
 
@@ -468,16 +445,15 @@ def archetype(ratings, position, ovr=None, age=None, dim_stats=None,
     def rel(key):
         return _rel_value(g(key, 0), dim_stats, key)
 
-    skill = _skill(pos, rel('drb'), rel('pss'), rel('reb'))  # noun — always kept
+    skill = _skill(pos, rel('RtR'), rel('ThP'), rel('BSc'), rel('Elu'), rel('Hnd'), rel('PRs'), rel('Rns'), rel('ThV'), rel('ThA'), rel('PCv'), rel('Tck'), rel('PBk'),rel('RBk'), rel('KPw'),rel('KAc'), rel('PPw'), rel('PAc'), rel('Spd'), rel('Hgt'), rel('Str'))  # noun — always kept
 
     # Adjective candidates as (canonical_order, word, distinctiveness). Only
     # non-blank descriptors compete; blanks contribute nothing.
-    hgt = g('hgt', 0)  # absolute — physical measurable, not league-relative
-    rel_athl = (rel('stre'), rel('spd'), rel('jmp'), rel('endu'))
-    rel_iq = (rel('oiq'), rel('diq'))
+    hgt = g('Hgt', 0)  # absolute — physical measurable, not league-relative
+    rel_athl = (rel('Str'), rel('Spd'), rel('End'))
     scoring_word, scoring_dist = _scoring(
-        g('ins', 0), g('dnk', 0), g('fg', 0), g('tp', 0),
-        rel('ins'), rel('dnk'), rel('fg'), rel('tp'), pos)
+        rel('BSc'), rel('Elu'), rel('RtR'), rel('ThV'), rel('ThA'), rel('Hnd', 0), rel('PBk'),rel('RBk'), rel('KPw'), rel('KAc'), rel('PPw'), rel('PAc'),
+        rel('Tck'), rel('PRs'), rel('Rns'), rel('PCv'), pos)
 
     adjectives = []
     h_word = _height(pos, hgt)
