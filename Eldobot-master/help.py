@@ -86,6 +86,9 @@ leagueScreen = {
     'badge [code]': 'Find players by badge (tp, A, B, Ps, Po, Dp, Di, R, V). Comma-separate for players with all of them',
     'retired [team] [page]': 'Retired players, most recently retired first, with their peak rating. Add a team to show only players who played there',
     'mvp': 'Top 10 MVP candidates',
+    'opoy': 'Top 10 OPOY candidates',
+    'droty': 'Top 10 OROTY candidates',
+    'oroty': 'Top 10 DROTY candidates',
     'dpoy': 'Top 10 DPOY candidates',
     'injuries': 'Current league injuries',
     'deaths': 'Players who have passed away',
@@ -174,7 +177,7 @@ coachesScreen = {
 modScreen = {
     'settings': 'View and edit all server settings',
     'edit [setting] [value]': 'Change a specific setting',
-    'load [URL]': 'Load a BBGM export file',
+    'load [URL]': 'Load a FBGM export file',
     'updatexport': 'Upload export to Dropbox',
     'teamlist': 'List teams and assigned GMs',
     'addgm [team] [@user]': 'Assign a GM to a team',
