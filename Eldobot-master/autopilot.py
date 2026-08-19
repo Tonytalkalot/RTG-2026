@@ -71,7 +71,7 @@ def generate_autopilot_offers(export, serverId):
         payroll = get_team_payroll(export, tid) / 1000
         rosterCount = get_roster_count(export, tid)
         posBreakdown = get_position_breakdown(export, tid)
-        needPositions = [pos for pos in ['PG', 'SG', 'SF', 'PF', 'C'] if posBreakdown.get(pos, 0) < 2]
+        needPositions = [pos for pos in ['QB', 'RB', 'TE', 'OL', 'DL', 'CB', 'S', 'K', 'P', 'LB', 'WR'] if posBreakdown.get(pos, 0) < 2]
 
         # Count how many offers we're generating for priority
         teamOfferCount = sum(1 for o in settings.get('offers', []) if o['team'] == tid)
