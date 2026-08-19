@@ -136,9 +136,9 @@ commandsRaw = {
     'mvp': 'league',
     'oroty': 'league',
     'droty': 'league',
-    'opoty': 'league',
+    'opoy': 'league',
 
-    'dpoty': 'league',
+    'dpoy': 'league',
     'summary': 'league',
     'media': 'league',
     'adv': 'players',
