@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 
-STAT_COLS = ['ppg', 'rpg', 'apg', 'spg', 'bpg', 'tov', 'mpg', 'fg_pct', 'tp_pct', 'ft_pct']
+STAT_COLS = ['Cmp','Att','Pct','Yds','TD','Int','Rush','Tgt','Rec','PBW','PBA','PBWR','RBW','RBA','RBWR','SkAlw','SkAlw%','FGM','FGA','Pct','Lng','XPM','XPA','Pct','Tck','Sk','PD','Int','FF','FR']
 WEIGHTS = np.array([1.5, 1.0, 1.2, 0.8, 0.8, 0.5, 0.7, 0.8, 1.0, 0.5])
 
 _df = None
@@ -13,7 +13,7 @@ _stds = None
 
 def load():
     global _df, _z_matrix, _means, _stds
-    path = os.path.join(os.path.dirname(__file__), 'static', 'nba_player_seasons.csv')
+    path = os.path.join(os.path.dirname(__file__), 'static', 'nfl_player_seasons.csv')
     df = pd.read_csv(path)
 
     # Filter: modern era, minimum games
@@ -22,20 +22,38 @@ def load():
 
     # Rename columns to our standard names
     df = df.rename(columns={
-        'pts_per_game': 'ppg',
-        'trb_per_game': 'rpg',
-        'ast_per_game': 'apg',
-        'stl_per_game': 'spg',
-        'blk_per_game': 'bpg',
-        'tov_per_game': 'tov',
-        'mp_per_game': 'mpg',
-        'fg_percent': 'fg_pct',
-        'x3p_percent': 'tp_pct',
-        'ft_percent': 'ft_pct',
+        'Cmp_per_game': 'Cmp',
+        'Att_per_game': 'Att',
+        'Pct_per_game': 'FGPct',
+        'Yds_per_game': 'Yds',
+        'TD_per_game': 'TD',
+        'Int_per_game': 'Int',
+        'Rush_per_game': 'Rush',
+        'Tgt_per_game': 'Tgt',
+        'Rec_per_game': 'Rec',
+        'PBW_per_game': 'PBW',
+        'PBA_per_game': 'PBA',
+        'PBWR_per_game': 'PBWR',
+        'RBW_per_game': 'RBW',
+        'RBA_per_game': 'RBA',
+        'RBWR_per_game': 'RBWR',
+        'SkAlw%_per_game': 'SkAlw%',
+        'FGM_per_game': 'FGM',
+        'FGA_per_game': 'FGA',
+        'PD_per_game': 'PD',
+        'Int_per_game': 'Int',
+        'FF_per_game': 'FF',
+        'FR_per_game': 'FR',
+        'XPM_per_game': 'XPM',
+        'XPA_per_game': 'XPA',
+        'Pct_pct': 'XPPct',
+        'Tck_per_game': 'Tck',
+        'Sk_per_game': 'Sk',
+        
     })
 
-    # Convert percentages from 0-1 to 0-100 to match BBGM scale
-    for col in ['fg_pct', 'tp_pct', 'ft_pct']:
+    # Convert percentages from 0-1 to 0-100 to match FBGM scale
+    for col in ['Pct_pct', 'Pct_per_game']:
         df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0) * 100
 
     # Fill any remaining NaN stat values with 0
@@ -53,16 +71,16 @@ def load():
 
 
 def find_similar(bbgm_stats, top_n=3):
-    """Find the top_n most statistically similar real NBA player-seasons.
+    """Find the top_n most statistically similar real NFL player-seasons.
 
-    bbgm_stats: dict with keys matching STAT_COLS (ppg, rpg, apg, etc.)
+    bbgm_stats: dict with keys matching STAT_COLS ('Cmp', 'Att', 'Pct',' Yds',' TD', 'Int', 'Rush', 'Tgt', 'Rec', 'PBW', 'PBA', 'PBWR', 'RBW', 'RBA', 'RBWR', 'SkAlw', 'SkAlw%', 'FGM', 'FGA', 'Pct', 'Lng', 'XPM', 'XPA', 'Pct', 'Tck', 'Sk', 'PD', 'Int', 'FF', 'FR' etc.)
                 Percentages should be 0-100 scale.
     Returns list of dicts with player, season, team, distance, and key stats.
     """
     if _df is None:
         return []
 
-    vec = np.array([float(bbgm_stats.get(c, 0)) for c in STAT_COLS])
+    vec = np.array([float(fbgm_stats.get(c, 0)) for c in STAT_COLS])
     z_vec = (vec - _means) / _stds
     diffs = _z_matrix - z_vec
     distances = np.sqrt(np.sum(WEIGHTS * diffs ** 2, axis=1))
@@ -76,13 +94,32 @@ def find_similar(bbgm_stats, top_n=3):
             'season': int(row['season']),
             'team': row['team'],
             'distance': float(distances[i]),
-            'ppg': row['ppg'],
-            'rpg': row['rpg'],
-            'apg': row['apg'],
-            'spg': row['spg'],
-            'bpg': row['bpg'],
-            'fg_pct': row['fg_pct'],
-            'tp_pct': row['tp_pct'],
-            'ft_pct': row['ft_pct'],
+        'Cmp_per_game': row ['Cmp'],
+        'Att_per_game': row ['Att'],
+        'Pct_per_game': row ['FGPct'],
+        'Yds_per_game': row ['Yds'],
+        'TD_per_game': row ['TD'],
+        'Int_per_game': row ['Int'],
+        'Rush_per_game': row ['Rush'],
+        'Tgt_per_game': row ['Tgt'],
+        'Rec_per_game': row ['Rec'],
+        'PBW_per_game': row ['PBW'],
+        'PBA_per_game': row ['PBA'],
+        'PBWR_per_game': row ['PBWR'],
+        'RBW_per_game': row ['RBW'],
+        'RBA_per_game': row ['RBA'],
+        'RBWR_per_game': row ['RBWR'],
+        'SkAlw%_per_game': row ['SkAlw%'],
+        'FGM_per_game': row ['FGM'],
+        'FGA_per_game': row ['FGA'],
+        'PD_per_game': row ['PD'],
+        'Int_per_game': row ['Int'],
+        'FF_per_game': row ['FF'],
+        'FR_per_game': row ['FR]',
+        'XPM_per_game': row ['XPM'],
+        'XPA_per_game': row ['XPA'],
+        'Pct_pct': row ['XPPct'],
+        'Tck_per_game': row ['Tck'],
+        'Sk_per_game': row ['Sk'],
         })
     return results
