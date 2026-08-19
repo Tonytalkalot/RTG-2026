@@ -56,7 +56,7 @@ def addrating(embed, player, commandInfo):
             rating = None
             amount = 0
             for item in commandInfo['message'].content.split(" "):
-                if item in ['hgt','stre','endu','jmp','dnk','spd','ins','fg','ft','tp','oiq','diq','reb','pss','drb']:
+                if item in ['BSc', 'Elu', 'RtR', 'Hnd', 'Tck', 'PRs', 'RnS', 'PCv', 'PBk', 'RBk', 'ThV', 'ThP', 'ThA', 'KPw', 'KAc', 'PPw', 'PAc', 'Spd', 'Str', 'Hgt']:
                     rating = item
                 try:
                     amount = int(item)
@@ -102,7 +102,7 @@ def addrating(embed, player, commandInfo):
                 print(p['ratings'][-1]['skills'])
                 p['ratings'][-1]['skills'] = skillstring
             else:
-                embed.add_field(name = 'supply one of the following rating names', value = str(['hgt','stre','endu','jmp','dnk','spd','ins','fg','ft','tp','oiq','diq','reb','pss','drb']))
+                embed.add_field(name = 'supply one of the following rating names', value = str(['BSc', 'Elu', 'RtR', 'Hnd', 'Tck', 'PRs', 'RnS', 'PCv', 'PBk', 'RBk', 'ThV', 'ThP', 'ThA', 'KPw', 'KAc', 'PPw', 'PAc', 'Spd', 'Str', 'Hgt']))
     embed.add_field(name='Added rating', value='This added rating '+str(amount)+ ' to rating '+str(rating)+' of player '+str(player['name']))
     return embed
 def default(embed, player, commandInfo):
@@ -139,24 +139,29 @@ def pratings(embed, player, commandInfo):
         
         overallBlock = (f"**Overall:** {r['ovr']} ({formatchange(s['ovr'],r['ovr'])}) \n"
              + f" **Potential:** {r['pot']} ({formatchange(s['pot'],r['pot'])})" )
-        physicalBlock = (f"**Height:** {r['hgt']} ({formatchange(s['hgt'],r['hgt'])})" + '\n'
-             + f"**Strength:** {r['stre']} ({formatchange(s['stre'],r['stre'])})" + '\n'
-             + f"**Speed:** {r['spd']} ({formatchange(s['spd'],r['spd'])})" + '\n'
-             + f"**Jumping:** {r['jmp']} ({formatchange(s['jmp'],r['jmp'])})" + '\n'
-             + f"**Endurance:** {r['endu']} ({formatchange(s['endu'],r['endu'])})")
-        shootingBlock = (f"**Inside:** {r['ins']} ({formatchange(s['ins'],r['ins'])})" + '\n'
-                         + f"**Dunks/Layups:** {r['dnk']} ({formatchange(s['dnk'],r['dnk'])})" + '\n'
-                         + f"**Free Throws:** {r['ft']} ({formatchange(s['ft'],r['ft'])})" + '\n'
-                         + f"**Two Pointers:** {r['fg']} ({formatchange(s['fg'],r['fg'])})" + '\n'
-                         + f"**Three Pointers:** {r['tp']} ({formatchange(s['tp'],r['tp'])})")
-        skillBlock = (f"**Offensive IQ:** {r['oiq']} ({formatchange(s['oiq'],r['oiq'])})" + '\n'
-                      + f"**Defensive IQ:** {r['diq']} ({formatchange(s['diq'],r['diq'])})" + '\n'
-                      + f"**Dribbling:** {r['drb']} ({formatchange(s['drb'],r['drb'])})" + '\n'
-                      + f"**Passing:** {r['pss']} ({formatchange(s['pss'],r['pss'])})" + '\n'
-                      + f"**Rebounding:** {r['reb']} ({formatchange(s['reb'],r['reb'])})")
+        physicalBlock = (f"**Height:** {r['Hgt']} ({formatchange(s['Hgt'],r['Hgt'])})" + '\n'
+             + f"**Strength:** {r['Str']} ({formatchange(s['stre'],r['stre'])})" + '\n'
+             + f"**Speed:** {r['Spd']} ({formatchange(s['spd'],r['spd'])})" + '\n'
+             + f"**Endurance:** {r['End']} ({formatchange(s['endu'],r['endu'])})")
+      skillBlock = (f"**Hands:** {r['Hnd']} ({formatchange(s['Hnd'],r['Hnd'])})" + '\n'
+                      + f"**Elusiveness:** {r['Elu']} ({formatchange(s['Elu'],r['Elu'])})" + '\n'
+                      + f"**Throw Power:** {r['ThP']} ({formatchange(s['Thp'],r['Thp'])})" + '\n'
+                      + f"**Throw Accuracy:** {r['ThA']} ({formatchange(s['ThA'],r['Tha'])})" + '\n'
+                      + f"**Throw Vision:** {r['tp']} ({formatchange(s['ThV'],r['Thv'])})") + '\n'
+                      + (f"**Route Running:** {r['RtR']} ({formatchange(s['RtR'],r['RtR'])})" + '\n'
+                      + f"**Ball Security:** {r['BSc']} ({formatchange(s['BSc'],r['BSc'])})" + '\n'
+                      + f"**Tackle:** {r['Tck']} ({formatchange(s['Tck'],r['Tck'])})" + '\n'
+                      + f"**Run Stopping:** {r['RnS']} ({formatchange(s['RnS'],r['RnS'])})" + '\n'
+                      + f"**Pass Rush:** {r['PRs']} ({formatchange(s['PRs'],r['PRs'])})") + '\n'
+                      + f"**Pass Coverage:** {r['PCv']} ({formatchange(s['PCv'],r['PCv'])})" + '\n'
+                      + f"**Pass Blocking:** {r['PBk']} ({formatchange(s['PBk'],r['PBk'])})" + '\n'
+                      + f"**Run Blocking:** {r['RBk']} ({formatchange(s['RBk'],r['RBk'])})" + '\n'
+                      + f"**Kick Power:** {r['KPw']} ({formatchange(s['KPw'],r['KPw'])})") + '\n'
+                      + (f"**Kick Accuracy:** {r['KAc']} ({formatchange(s['KAc'],r['KAc'])})" + '\n'
+                      + f"**Punt Power:** {r['PPw']} ({formatchange(s['PPw'],r['PPw'])})" + '\n'
+                      + f"**Punt Accuracy:** {r['PAc']} ({formatchange(s['PAc'],r['PAc'])})" + '\n'
         embed.add_field(name = 'Overall', value = overallBlock, inline = False)
         embed.add_field(name='Physical', value=physicalBlock)
-        embed.add_field(name='Shooting', value=shootingBlock)
         embed.add_field(name='Skill', value=skillBlock)
         return embed
     else:
@@ -241,7 +246,7 @@ def whoidolizes(embed, player, commandInfo):
                 if isgoated:
                     diffs = []
 
-                    for ratingitem in ['hgt','stre','endu','jmp','spd','fg','ft','tp','ins','dnk','oiq','diq','drb','pss','reb']:
+                    for ratingitem in ['BSc', 'Elu', 'RtR', 'Hnd', 'Tck', 'PRs', 'RnS', 'PCv', 'PBk', 'RBk', 'ThV', 'ThP', 'ThA', 'KPw', 'KAc', 'PPw', 'PAc', 'Spd', 'Str', 'Hgt']:
                         diffs.append(peakovrrating[ratingitem]-dr[ratingitem])
                     mean = sum(diffs)/len(diffs)
                     var = 0
@@ -462,7 +467,7 @@ def stats(embed, player, commandInfo):
     return(embed)
 
 def estimate_wingspan(raw_player, rating_row=None):
-    # BBGM generates the hgt rating from true height + a +/-1" wingspan bonus,
+    # FBGM generates the hgt rating from true height + a +/-1" wingspan bonus,
     # mapped so 66" (5'6") = 0 and 93" (7'9") = 100. Inverting that and comparing
     # against the listed height recovers the wingspan bonus; adding the ~4.5"
     # NBA-average wingspan-over-height gives an estimated wingspan.
@@ -1070,7 +1075,7 @@ def pcompare(embed, player, commandInfo):
     embed.add_field(name ="**"+ fname +" ("+str(fyear)+") V.S. "+sname+" ("+str(syear)+")"+"**", value = string.replace("|"," ** | ** "), inline = False)
     string = ""
 
-    for r in ['ovr','pot','hgt','stre','spd','jmp','endu','ins','dnk','ft','fg','tp','oiq','diq','drb','pss','reb']:
+    for r in ['BSc', 'Elu', 'RtR', 'Hnd', 'Tck', 'PRs', 'RnS', 'PCv', 'PBk', 'RBk', 'ThV', 'ThP', 'ThA', 'KPw', 'KAc', 'PPw', 'PAc', 'Spd', 'Str', 'Hgt']:
         if fyear == 'career':
             peak = 0
             for rat in fplayer['ratings']:
@@ -1176,7 +1181,7 @@ def pcompare(embed, player, commandInfo):
     string = ""
     l1 = [fppg,frpg,fapg,fstls,fblks,ftovs,fper,fows,fdws,fewa]
     l2 = [sppg,srpg,sapg,sstls,sblks,stovs,sper,sows,sdws,sewa]
-    names = ['pts','reb','ast','stl','blk','tov','per','ows','dws','ewa']
+    names = ['BSc', 'Elu', 'RtR', 'Hnd', 'Tck', 'PRs', 'RnS', 'PCv', 'PBk', 'RBk', 'ThV', 'ThP', 'ThA', 'KPw', 'KAc', 'PPw', 'PAc', 'Spd', 'Str', 'Hgt']
     for item in range (0, len(l1)):
         if l1[item] > l2[item]:
             string += '**'+str(round(l1[item],1))+'**|'+names[item]+"|"+str(round(l2[item],1))+"\n"
