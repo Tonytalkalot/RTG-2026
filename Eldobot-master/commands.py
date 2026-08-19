@@ -134,8 +134,11 @@ commandsRaw = {
     'retired': 'league',
     'badge': 'league',
     'mvp': 'league',
+    'oroty': 'league',
+    'droty': 'league',
+    'opoty': 'league',
 
-    'dpoy': 'league',
+    'dpoty': 'league',
     'summary': 'league',
     'media': 'league',
     'adv': 'players',
